@@ -194,6 +194,7 @@ public class PolicyManagementFragment extends PreferenceFragment implements
     private static final String ENABLE_SYSTEM_APPS_BY_PACKAGE_NAME_KEY
             = "enable_system_apps_by_package_name";
     private static final String ENABLE_SYSTEM_APPS_KEY = "enable_system_apps";
+    private static final String INSTALL_UPDATE_APP = "install_update_app";
     private static final String GET_CA_CERTIFICATES_KEY = "get_ca_certificates";
     private static final String GET_DISABLE_ACCOUNT_MANAGEMENT_KEY
             = "get_disable_account_management";
@@ -397,6 +398,7 @@ public class PolicyManagementFragment extends PreferenceFragment implements
         findPreference(CREATE_WIFI_CONFIGURATION_KEY).setOnPreferenceClickListener(this);
         findPreference(WIFI_CONFIG_LOCKDOWN_ENABLE_KEY).setOnPreferenceChangeListener(this);
         findPreference(MODIFY_WIFI_CONFIGURATION_KEY).setOnPreferenceClickListener(this);
+        findPreference(INSTALL_UPDATE_APP).setOnPreferenceClickListener(this);
         mInstallNonMarketAppsPreference = (SwitchPreference) findPreference(
                 INSTALL_NONMARKET_APPS_KEY);
         mInstallNonMarketAppsPreference.setOnPreferenceChangeListener(this);
@@ -591,6 +593,10 @@ public class PolicyManagementFragment extends PreferenceFragment implements
                 return true;
             case SET_USER_RESTRICTIONS_KEY:
                 showFragment(new UserRestrictionsDisplayFragment());
+                return true;
+            case INSTALL_UPDATE_APP:
+                showToast("Not implemented yet");
+                // TODO(kirillov): add code here
                 return true;
         }
         return false;
@@ -1239,6 +1245,30 @@ public class PolicyManagementFragment extends PreferenceFragment implements
                 })
                 .setNegativeButton(android.R.string.cancel, null)
                 .show();
+    }
+
+    private void showInstallAppPrompt() {
+        if (getActivity() == null || getActivity().isFinishing()) {
+            return;
+        }
+        LinearLayout inputContainer = (LinearLayout) getActivity().getLayoutInflater()
+                .inflate(R.layout.install_update_app, null);
+
+        final EditText packageName = (EditText) inputContainer.findViewById(R.id.package_name);
+        final EditText apkPath = (EditText) inputContainer.findViewById(R.id.apk_path);
+
+        new AlertDialog.Builder(getActivity())
+                .setTitle("Install or update an app")
+                .setView(inputContainer)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        final String packageNameValue = packageName.getText().toString();
+                        final String apkPathValue = apkPath.getText().toString();
+
+                        showToast("Package: " + packageNameValue + ", apk: " + apkPathValue);
+                    }
+                });
     }
 
     /**

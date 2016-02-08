@@ -58,6 +58,9 @@
         <Preference
                 android:key="manage_app_restrictions"
                 android:title="@string/manage_app_restrictions"/>
+        <Preference
+                android:key="install_update_app"
+                android:title="Install or update an app" />
     </PreferenceCategory>
 
     <PreferenceCategory
